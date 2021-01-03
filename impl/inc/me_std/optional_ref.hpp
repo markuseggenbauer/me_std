@@ -24,8 +24,33 @@ class optional_ref {
   }
 
   operator bool() const noexcept { return has_value(); }
+
   bool operator==(optional_ref<T> other) const noexcept {
-    return m_value == other.m_value;
+    if (m_value == other.m_value) {
+      return true;
+    }
+
+    if ((m_value != nullptr) && (other.m_value != nullptr)) {
+      return *m_value == *other.m_value;
+    }
+
+    return false;
+  }
+
+  bool operator<(optional_ref<T> other) const noexcept {
+    if (m_value == other.m_value) {
+      return false;
+    }
+
+    if (m_value == nullptr) {
+      return true;
+    }
+
+    if (other.m_value == nullptr) {
+      return false;
+    }
+
+    return *m_value < *other.m_value;
   }
 
  private:
@@ -43,18 +68,58 @@ bool operator==(optional_ref<T const&> lhs, T const& rhs) {
 }
 
 template <typename T>
+bool operator<(T const& lhs, optional_ref<T const&> rhs) {
+  return rhs && (lhs < rhs.value());
+}
+
+template <typename T>
+bool operator<(optional_ref<T const&> lhs, T const& rhs) {
+  return !lhs || (lhs.value() < rhs);
+}
+
+template <typename T>
 bool operator!=(optional_ref<T> lhs, optional_ref<T> rhs) {
   return !(lhs == rhs);
 }
 
 template <typename T>
 bool operator!=(T const& lhs, optional_ref<T const&> rhs) {
-  return !rhs || (lhs != rhs.value());
+  return !(lhs == rhs);
 }
 
 template <typename T>
 bool operator!=(optional_ref<T const&> lhs, T const& rhs) {
-  return !lhs || (lhs.value() != rhs);
+  return !(lhs == rhs);
+}
+
+template <typename T>
+bool operator<=(optional_ref<T> lhs, optional_ref<T> rhs) {
+  return (lhs == rhs) || (lhs < rhs);
+}
+
+template <typename T>
+bool operator<=(T const& lhs, optional_ref<T const&> rhs) {
+  return (lhs == rhs) || (lhs < rhs);
+}
+
+template <typename T>
+bool operator<=(optional_ref<T const&> lhs, T const& rhs) {
+  return (lhs == rhs) || (lhs < rhs);
+}
+
+template <typename T>
+bool operator>(optional_ref<T> lhs, optional_ref<T> rhs) {
+  return !(lhs <= rhs);
+}
+
+template <typename T>
+bool operator>(T const& lhs, optional_ref<T const&> rhs) {
+  return !(lhs <= rhs);
+}
+
+template <typename T>
+bool operator>(optional_ref<T const&> lhs, T const& rhs) {
+  return !(lhs <= rhs);
 }
 
 }  // namespace me_std
