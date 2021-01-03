@@ -122,6 +122,21 @@ bool operator>(optional_ref<T const&> lhs, T const& rhs) {
   return !(lhs <= rhs);
 }
 
+template <typename T>
+bool operator>=(optional_ref<T> lhs, optional_ref<T> rhs) {
+  return (lhs == rhs) || (lhs > rhs);
+}
+
+template <typename T>
+bool operator>=(T const& lhs, optional_ref<T const&> rhs) {
+  return (lhs == rhs) || (lhs > rhs);
+}
+
+template <typename T>
+bool operator>=(optional_ref<T const&> lhs, T const& rhs) {
+  return (lhs == rhs) || (lhs > rhs);
+}
+
 }  // namespace me_std
 
 #endif  // ME_STD_OPTIONAL_REF_HPP

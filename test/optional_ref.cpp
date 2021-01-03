@@ -176,8 +176,28 @@ TYPED_TEST_P(OptionalRefValueTest, OperatorGT) {
   EXPECT_FALSE(this->test_value_ref > this->larger_value);
 }
 
+TYPED_TEST_P(OptionalRefValueTest, OperatorGE) {
+  EXPECT_TRUE(this->empty_ref >= this->test_empty_ref);
+  EXPECT_TRUE(this->test_empty_ref >= this->empty_ref);
+
+  EXPECT_FALSE(this->empty_ref >= this->test_value_ref);
+  EXPECT_TRUE(this->test_value_ref >= this->empty_ref);
+
+  EXPECT_TRUE(this->same_value_ref >= this->test_value_ref);
+  EXPECT_TRUE(this->test_value_ref >= this->same_value_ref);
+
+  EXPECT_TRUE(this->same_value >= this->test_value_ref);
+  EXPECT_TRUE(this->test_value_ref >= this->same_value);
+
+  EXPECT_TRUE(this->larger_value_ref >= this->test_value_ref);
+  EXPECT_FALSE(this->test_value_ref >= this->larger_value_ref);
+
+  EXPECT_TRUE(this->larger_value >= this->test_value_ref);
+  EXPECT_FALSE(this->test_value_ref >= this->larger_value);
+}
+
 REGISTER_TYPED_TEST_SUITE_P(OptionalRefValueTest, Value, OperatorEQ, OperatorNE,
-                            OperatorLT, OperatorLE, OperatorGT);
+                            OperatorLT, OperatorLE, OperatorGT, OperatorGE);
 
 INSTANTIATE_TYPED_TEST_SUITE_P(ME, OptionalRefValueTest, TestTypes);
 
