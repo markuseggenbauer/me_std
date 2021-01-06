@@ -2,6 +2,7 @@
 #define ME_STD_OPTIONAL_REF_HPP
 
 #include <cassert>
+#include <optional>
 #include <type_traits>
 
 namespace me_std {
@@ -14,18 +15,41 @@ class optional_ref {
                 "Template argument T must be a constant qualified type.");
 
  public:
-  optional_ref() = default;
-  optional_ref(T value) : m_value{&value} {}
+  using value_type = std::decay_t<T>;
+  using reference_type = T;
 
-  bool has_value() const noexcept { return m_value != nullptr; }
-  T value() const noexcept {
+  optional_ref() = default;
+  optional_ref(reference_type value) : m_value{&value} {}
+  optional_ref(std::optional<value_type> const& optional)
+      : m_value{optional.has_value() ? optional.operator->() : nullptr} {}
+
+  auto has_value() const noexcept { return m_value != nullptr; }
+
+  auto operator*() const noexcept {
     assert(has_value());
     return *m_value;
   }
 
-  operator bool() const noexcept { return has_value(); }
+  auto operator->() const noexcept {
+    assert(has_value());
+    return m_value;
+  }
 
-  bool operator==(optional_ref<T> other) const noexcept {
+  auto value() const {
+    if (!has_value()) {
+      throw std::bad_optional_access{};
+    }
+    return *m_value;
+  }
+
+  operator std::optional<value_type>() const noexcept {
+    if (has_value()) {
+      return std::optional<value_type>{value()};
+    }
+    return std::optional<value_type>{};
+  }
+
+  auto operator==(optional_ref<reference_type> other) const noexcept {
     if (m_value == other.m_value) {
       return true;
     }
@@ -37,7 +61,7 @@ class optional_ref {
     return false;
   }
 
-  bool operator<(optional_ref<T> other) const noexcept {
+  auto operator<(optional_ref<reference_type> other) const noexcept {
     if (m_value == other.m_value) {
       return false;
     }
@@ -54,27 +78,27 @@ class optional_ref {
   }
 
  private:
-  std::decay_t<T> const* m_value{nullptr};
-};
+  value_type const* m_value{nullptr};
+};  // namespace me_std
 
 template <typename T>
 bool operator==(T const& lhs, optional_ref<T const&> rhs) {
-  return rhs && (lhs == rhs.value());
+  return rhs.has_value() && (lhs == *rhs);
 }
 
 template <typename T>
 bool operator==(optional_ref<T const&> lhs, T const& rhs) {
-  return lhs && (lhs.value() == rhs);
+  return lhs.has_value() && (*lhs == rhs);
 }
 
 template <typename T>
 bool operator<(T const& lhs, optional_ref<T const&> rhs) {
-  return rhs && (lhs < rhs.value());
+  return rhs.has_value() && (lhs < *rhs);
 }
 
 template <typename T>
 bool operator<(optional_ref<T const&> lhs, T const& rhs) {
-  return !lhs || (lhs.value() < rhs);
+  return !lhs.has_value() || (*lhs < rhs);
 }
 
 template <typename T>

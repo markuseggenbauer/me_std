@@ -1,5 +1,6 @@
 #include <array>
 #include <me_std/optional_ref.hpp>
+#include <optional>
 #include <string>
 
 #include "gtest/gtest.h"
@@ -31,25 +32,38 @@ class OptionalRefTest : public ::testing::Test {};
 TYPED_TEST_SUITE_P(OptionalRefTest);
 
 TYPED_TEST_P(OptionalRefTest, DefaultConstruct) {
-  me_std::optional_ref<TypeParam> object{};
-  EXPECT_FALSE(object);
-  EXPECT_FALSE(object.has_value());
+  me_std::optional_ref<TypeParam> test_ref{};
+  EXPECT_FALSE(test_ref.has_value());
 }
 
 TYPED_TEST_P(OptionalRefTest, DefaultValueConstruct) {
-  me_std::optional_ref<TypeParam> object{TypeParam{}};
-  EXPECT_TRUE(object);
-  EXPECT_TRUE(object.has_value());
+  me_std::optional_ref<TypeParam> test_ref{TypeParam{}};
+  EXPECT_TRUE(test_ref.has_value());
 }
 
 TYPED_TEST_P(OptionalRefTest, ValueConstruct) {
-  me_std::optional_ref<TypeParam> object{get_value<TypeParam>(ValueType::test)};
-  EXPECT_TRUE(object);
-  EXPECT_TRUE(object.has_value());
+  me_std::optional_ref<TypeParam> test_ref{
+      get_value<TypeParam>(ValueType::test)};
+  EXPECT_TRUE(test_ref.has_value());
 }
 
-REGISTER_TYPED_TEST_SUITE_P(OptionalRefTest, DefaultConstruct, ValueConstruct,
-                            DefaultValueConstruct);
+TYPED_TEST_P(OptionalRefTest, OptionalValueConstruct) {
+  std::optional<std::decay_t<TypeParam>> test_value_optional{
+      get_value<TypeParam>(ValueType::test)};
+  me_std::optional_ref<TypeParam> test_ref{test_value_optional};
+  EXPECT_TRUE(test_ref.has_value());
+  EXPECT_EQ(test_ref.value(), get_value<TypeParam>(ValueType::test));
+}
+
+TYPED_TEST_P(OptionalRefTest, OptionalEmptyConstruct) {
+  std::optional<std::decay_t<TypeParam>> test_value_optional{};
+  me_std::optional_ref<TypeParam> test_ref{test_value_optional};
+  EXPECT_FALSE(test_ref.has_value());
+}
+
+REGISTER_TYPED_TEST_SUITE_P(OptionalRefTest, DefaultConstruct,
+                            DefaultValueConstruct, ValueConstruct,
+                            OptionalValueConstruct, OptionalEmptyConstruct);
 
 INSTANTIATE_TYPED_TEST_SUITE_P(ME, OptionalRefTest, TestTypes);
 
@@ -68,12 +82,26 @@ class OptionalRefValueTest : public ::testing::Test {
   me_std::optional_ref<T> const same_value_ref{same_value};
   me_std::optional_ref<T> const other_value_ref{other_value};
   me_std::optional_ref<T> const larger_value_ref{larger_value};
+
+  void SetUp() override {
+    ASSERT_FALSE(test_empty_ref.has_value());
+    ASSERT_TRUE(test_value_ref.has_value());
+    ASSERT_TRUE(same_value_ref.has_value());
+    ASSERT_TRUE(other_value_ref.has_value());
+    ASSERT_TRUE(larger_value_ref.has_value());
+  }
 };
 
 TYPED_TEST_SUITE_P(OptionalRefValueTest);
 
+TYPED_TEST_P(OptionalRefValueTest, NoValue) {
+  EXPECT_THROW(this->test_empty_ref.value(), std::bad_optional_access);
+}
+
 TYPED_TEST_P(OptionalRefValueTest, Value) {
   EXPECT_EQ(this->test_value_ref.value(), this->test_value);
+  EXPECT_EQ(*this->test_value_ref, this->test_value);
+  EXPECT_EQ(*(this->test_value_ref.operator->()), this->test_value);
 }
 
 TYPED_TEST_P(OptionalRefValueTest, OperatorEQ) {
@@ -196,8 +224,20 @@ TYPED_TEST_P(OptionalRefValueTest, OperatorGE) {
   EXPECT_FALSE(this->test_value_ref >= this->larger_value);
 }
 
-REGISTER_TYPED_TEST_SUITE_P(OptionalRefValueTest, Value, OperatorEQ, OperatorNE,
-                            OperatorLT, OperatorLE, OperatorGT, OperatorGE);
+TYPED_TEST_P(OptionalRefValueTest, EmptyToOptional) {
+  std::optional<std::decay_t<TypeParam>> test_value{this->test_empty_ref};
+  EXPECT_FALSE(test_value.has_value());
+}
+
+TYPED_TEST_P(OptionalRefValueTest, ValueToOptional) {
+  std::optional<std::decay_t<TypeParam>> test_value{this->test_value_ref};
+  EXPECT_TRUE(test_value.has_value());
+  EXPECT_EQ(test_value.value(), get_value<TypeParam>(ValueType::test));
+}
+
+REGISTER_TYPED_TEST_SUITE_P(OptionalRefValueTest, NoValue, Value, OperatorEQ,
+                            OperatorNE, OperatorLT, OperatorLE, OperatorGT,
+                            OperatorGE, EmptyToOptional, ValueToOptional);
 
 INSTANTIATE_TYPED_TEST_SUITE_P(ME, OptionalRefValueTest, TestTypes);
 
