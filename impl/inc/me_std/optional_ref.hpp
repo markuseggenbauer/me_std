@@ -20,7 +20,7 @@ class optional_ref {
 
   optional_ref() = default;
   optional_ref(reference_type value) : m_value{&value} {}
-  optional_ref(std::optional<value_type> const& optional)
+  optional_ref(std::optional<value_type> const &optional)
       : m_value{optional.has_value() ? optional.operator->() : nullptr} {}
 
   auto has_value() const noexcept { return m_value != nullptr; }
@@ -78,26 +78,26 @@ class optional_ref {
   }
 
  private:
-  value_type const* m_value{nullptr};
+  value_type const *m_value{nullptr};
 };  // namespace me_std
 
 template <typename T>
-bool operator==(T const& lhs, optional_ref<T const&> rhs) {
+bool operator==(T const &lhs, optional_ref<T const &> rhs) {
   return rhs.has_value() && (lhs == *rhs);
 }
 
 template <typename T>
-bool operator==(optional_ref<T const&> lhs, T const& rhs) {
+bool operator==(optional_ref<T const &> lhs, T const &rhs) {
   return lhs.has_value() && (*lhs == rhs);
 }
 
 template <typename T>
-bool operator<(T const& lhs, optional_ref<T const&> rhs) {
+bool operator<(T const &lhs, optional_ref<T const &> rhs) {
   return rhs.has_value() && (lhs < *rhs);
 }
 
 template <typename T>
-bool operator<(optional_ref<T const&> lhs, T const& rhs) {
+bool operator<(optional_ref<T const &> lhs, T const &rhs) {
   return !lhs.has_value() || (*lhs < rhs);
 }
 
@@ -107,12 +107,12 @@ bool operator!=(optional_ref<T> lhs, optional_ref<T> rhs) {
 }
 
 template <typename T>
-bool operator!=(T const& lhs, optional_ref<T const&> rhs) {
+bool operator!=(T const &lhs, optional_ref<T const &> rhs) {
   return !(lhs == rhs);
 }
 
 template <typename T>
-bool operator!=(optional_ref<T const&> lhs, T const& rhs) {
+bool operator!=(optional_ref<T const &> lhs, T const &rhs) {
   return !(lhs == rhs);
 }
 
@@ -122,12 +122,12 @@ bool operator<=(optional_ref<T> lhs, optional_ref<T> rhs) {
 }
 
 template <typename T>
-bool operator<=(T const& lhs, optional_ref<T const&> rhs) {
+bool operator<=(T const &lhs, optional_ref<T const &> rhs) {
   return (lhs == rhs) || (lhs < rhs);
 }
 
 template <typename T>
-bool operator<=(optional_ref<T const&> lhs, T const& rhs) {
+bool operator<=(optional_ref<T const &> lhs, T const &rhs) {
   return (lhs == rhs) || (lhs < rhs);
 }
 
@@ -137,12 +137,12 @@ bool operator>(optional_ref<T> lhs, optional_ref<T> rhs) {
 }
 
 template <typename T>
-bool operator>(T const& lhs, optional_ref<T const&> rhs) {
+bool operator>(T const &lhs, optional_ref<T const &> rhs) {
   return !(lhs <= rhs);
 }
 
 template <typename T>
-bool operator>(optional_ref<T const&> lhs, T const& rhs) {
+bool operator>(optional_ref<T const &> lhs, T const &rhs) {
   return !(lhs <= rhs);
 }
 
@@ -152,12 +152,12 @@ bool operator>=(optional_ref<T> lhs, optional_ref<T> rhs) {
 }
 
 template <typename T>
-bool operator>=(T const& lhs, optional_ref<T const&> rhs) {
+bool operator>=(T const &lhs, optional_ref<T const &> rhs) {
   return (lhs == rhs) || (lhs > rhs);
 }
 
 template <typename T>
-bool operator>=(optional_ref<T const&> lhs, T const& rhs) {
+bool operator>=(optional_ref<T const &> lhs, T const &rhs) {
   return (lhs == rhs) || (lhs > rhs);
 }
 

@@ -6,7 +6,7 @@
 #include "gtest/gtest.h"
 
 namespace {
-using TestTypes = ::testing::Types<int const&, std::string const&>;
+using TestTypes = ::testing::Types<int const &, std::string const &>;
 
 enum class ValueType : int { test, same, larger };
 
@@ -14,15 +14,14 @@ template <typename T>
 T get_value(ValueType);
 
 template <>
-int const& get_value<int const&>(ValueType type) {
+int const &get_value<int const &>(ValueType type) {
   static std::array<int, 3> const value{42, 42, 43};
   return value[static_cast<std::underlying_type_t<ValueType>>(type)];
 }
 
 template <>
-std::string const& get_value<std::string const&>(ValueType type) {
-  static std::array<std::string, 3> const value{"Hello World", "Hello World",
-                                                "Oh, Hello World"};
+std::string const &get_value<std::string const &>(ValueType type) {
+  static std::array<std::string, 3> const value{"Hello World", "Hello World", "Oh, Hello World"};
   return value[static_cast<std::underlying_type_t<ValueType>>(type)];
 }
 
@@ -42,14 +41,12 @@ TYPED_TEST_P(OptionalRefTest, DefaultValueConstruct) {
 }
 
 TYPED_TEST_P(OptionalRefTest, ValueConstruct) {
-  me_std::optional_ref<TypeParam> test_ref{
-      get_value<TypeParam>(ValueType::test)};
+  me_std::optional_ref<TypeParam> test_ref{get_value<TypeParam>(ValueType::test)};
   EXPECT_TRUE(test_ref.has_value());
 }
 
 TYPED_TEST_P(OptionalRefTest, OptionalValueConstruct) {
-  std::optional<std::decay_t<TypeParam>> test_value_optional{
-      get_value<TypeParam>(ValueType::test)};
+  std::optional<std::decay_t<TypeParam>> test_value_optional{get_value<TypeParam>(ValueType::test)};
   me_std::optional_ref<TypeParam> test_ref{test_value_optional};
   EXPECT_TRUE(test_ref.has_value());
   EXPECT_EQ(test_ref.value(), get_value<TypeParam>(ValueType::test));
@@ -61,9 +58,8 @@ TYPED_TEST_P(OptionalRefTest, OptionalEmptyConstruct) {
   EXPECT_FALSE(test_ref.has_value());
 }
 
-REGISTER_TYPED_TEST_SUITE_P(OptionalRefTest, DefaultConstruct,
-                            DefaultValueConstruct, ValueConstruct,
-                            OptionalValueConstruct, OptionalEmptyConstruct);
+REGISTER_TYPED_TEST_SUITE_P(OptionalRefTest, DefaultConstruct, DefaultValueConstruct,
+                            ValueConstruct, OptionalValueConstruct, OptionalEmptyConstruct);
 
 INSTANTIATE_TYPED_TEST_SUITE_P(ME, OptionalRefTest, TestTypes);
 
@@ -235,9 +231,9 @@ TYPED_TEST_P(OptionalRefValueTest, ValueToOptional) {
   EXPECT_EQ(test_value.value(), get_value<TypeParam>(ValueType::test));
 }
 
-REGISTER_TYPED_TEST_SUITE_P(OptionalRefValueTest, NoValue, Value, OperatorEQ,
-                            OperatorNE, OperatorLT, OperatorLE, OperatorGT,
-                            OperatorGE, EmptyToOptional, ValueToOptional);
+REGISTER_TYPED_TEST_SUITE_P(OptionalRefValueTest, NoValue, Value, OperatorEQ, OperatorNE,
+                            OperatorLT, OperatorLE, OperatorGT, OperatorGE, EmptyToOptional,
+                            ValueToOptional);
 
 INSTANTIATE_TYPED_TEST_SUITE_P(ME, OptionalRefValueTest, TestTypes);
 
