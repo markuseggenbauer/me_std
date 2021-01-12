@@ -9,7 +9,7 @@ set(CMAKE_CXX_FLAGS_DEBUG
 include(FetchContent)
 FetchContent_Declare(
   build_api
-  GIT_REPOSITORY https://github.com/markuseggenbauer/build_api.git
+  GIT_REPOSITORY git@github.com:markuseggenbauer/build_api.git
   GIT_TAG main)
 
 FetchContent_GetProperties(build_api)
