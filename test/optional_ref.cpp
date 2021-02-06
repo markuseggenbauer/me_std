@@ -6,7 +6,7 @@
 #include "gtest/gtest.h"
 
 namespace {
-using TestTypes = ::testing::Types<int const &, std::string const &>;
+using TestTypes = ::testing::Types<int const &, std::string const &, int &, std::string &>;
 
 enum class ValueType : int { test, same, larger };
 
