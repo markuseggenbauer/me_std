@@ -36,12 +36,14 @@ TYPED_TEST_P(OptionalRefTest, DefaultConstruct) {
 }
 
 TYPED_TEST_P(OptionalRefTest, DefaultValueConstruct) {
-  me_std::optional_ref<TypeParam> test_ref{TypeParam{}};
+  auto test_value = std::decay_t<TypeParam>{};
+  me_std::optional_ref<TypeParam> test_ref{test_value};
   EXPECT_TRUE(test_ref.has_value());
 }
 
 TYPED_TEST_P(OptionalRefTest, ValueConstruct) {
-  me_std::optional_ref<TypeParam> test_ref{get_value<std::decay_t<TypeParam>>(ValueType::test)};
+  auto test_value = get_value<std::decay_t<TypeParam>>(ValueType::test);
+  me_std::optional_ref<TypeParam> test_ref{test_value};
   EXPECT_TRUE(test_ref.has_value());
 }
 
