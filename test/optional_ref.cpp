@@ -14,13 +14,13 @@ template <typename T>
 T get_value(ValueType);
 
 template <>
-int const &get_value<int const &>(ValueType type) {
+int get_value<int>(ValueType type) {
   static std::array<int, 3> const value{42, 42, 43};
   return value[static_cast<std::underlying_type_t<ValueType>>(type)];
 }
 
 template <>
-std::string const &get_value<std::string const &>(ValueType type) {
+std::string get_value<std::string>(ValueType type) {
   static std::array<std::string, 3> const value{"Hello World", "Hello World", "Oh, Hello World"};
   return value[static_cast<std::underlying_type_t<ValueType>>(type)];
 }
@@ -41,15 +41,16 @@ TYPED_TEST_P(OptionalRefTest, DefaultValueConstruct) {
 }
 
 TYPED_TEST_P(OptionalRefTest, ValueConstruct) {
-  me_std::optional_ref<TypeParam> test_ref{get_value<TypeParam>(ValueType::test)};
+  me_std::optional_ref<TypeParam> test_ref{get_value<std::decay_t<TypeParam>>(ValueType::test)};
   EXPECT_TRUE(test_ref.has_value());
 }
 
 TYPED_TEST_P(OptionalRefTest, OptionalValueConstruct) {
-  std::optional<std::decay_t<TypeParam>> test_value_optional{get_value<TypeParam>(ValueType::test)};
+  std::optional<std::decay_t<TypeParam>> test_value_optional{
+      get_value<std::decay_t<TypeParam>>(ValueType::test)};
   me_std::optional_ref<TypeParam> test_ref{test_value_optional};
   EXPECT_TRUE(test_ref.has_value());
-  EXPECT_EQ(test_ref.value(), get_value<TypeParam>(ValueType::test));
+  EXPECT_EQ(test_ref.value(), get_value<std::decay_t<TypeParam>>(ValueType::test));
 }
 
 TYPED_TEST_P(OptionalRefTest, OptionalEmptyConstruct) {
@@ -66,10 +67,11 @@ INSTANTIATE_TYPED_TEST_SUITE_P(ME, OptionalRefTest, TestTypes);
 template <typename T>
 class OptionalRefValueTest : public ::testing::Test {
  protected:
-  T const test_value = get_value<T>(ValueType::test);
-  T const same_value = get_value<T>(ValueType::same);
-  T const other_value = get_value<T>(ValueType::larger);
-  T const larger_value = get_value<T>(ValueType::larger);
+  using test_value_type = std::decay_t<T>;
+  test_value_type test_value = get_value<test_value_type>(ValueType::test);
+  test_value_type same_value = get_value<test_value_type>(ValueType::same);
+  test_value_type other_value = get_value<test_value_type>(ValueType::larger);
+  test_value_type larger_value = get_value<test_value_type>(ValueType::larger);
 
   me_std::optional_ref<T> const test_value_ref{test_value};
   me_std::optional_ref<T> const test_empty_ref{};
@@ -228,7 +230,7 @@ TYPED_TEST_P(OptionalRefValueTest, EmptyToOptional) {
 TYPED_TEST_P(OptionalRefValueTest, ValueToOptional) {
   std::optional<std::decay_t<TypeParam>> test_value{this->test_value_ref};
   EXPECT_TRUE(test_value.has_value());
-  EXPECT_EQ(test_value.value(), get_value<TypeParam>(ValueType::test));
+  EXPECT_EQ(test_value.value(), get_value<std::decay_t<TypeParam>>(ValueType::test));
 }
 
 REGISTER_TYPED_TEST_SUITE_P(OptionalRefValueTest, NoValue, Value, OperatorEQ, OperatorNE,
