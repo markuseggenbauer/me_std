@@ -1,6 +1,6 @@
 [requires]
 gtest/1.10.0
-build_api/0.1
+build_api/1.0
 
 [generators]
 cmake_find_package
