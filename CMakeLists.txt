@@ -4,8 +4,9 @@ project(me_std)
 
 include(setup.cmake)
 
+find_package(GTest)
+
 add_subdirectory(impl)
-add_subdirectory(test)
 
 me_add_library(
     me_std
