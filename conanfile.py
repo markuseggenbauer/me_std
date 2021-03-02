@@ -15,7 +15,7 @@ class MeStdConan(ConanFile):
     build_requires = "gtest/1.10.0"
     requires = "me_package/1.0", "me_build/1.0"
     generators = "cmake_find_package"
-    exports_sources = "CMakeLists.txt", "impl/*"
+    exports_sources = "CMakeLists.txt", "impl/*", "package_bootstrap*"
 
 
     def config_options(self):

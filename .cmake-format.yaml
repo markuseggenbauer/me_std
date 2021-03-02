@@ -75,15 +75,15 @@ format:
   _help_max_subgroups_hwrap:
   - If an argument group contains more than this many sub-groups
   - (parg or kwarg groups) then force it to a vertical layout.
-  max_subgroups_hwrap: 1
+  max_subgroups_hwrap: 4
   _help_max_pargs_hwrap:
   - If a positional argument group contains more than this many
   - arguments, then force it to a vertical layout.
-  max_pargs_hwrap: 1
+  max_pargs_hwrap: 3
   _help_max_rows_cmdline:
   - If a cmdline positional group consumes more than this many
   - lines without nesting, then invalidate the layout (and nest)
-  max_rows_cmdline: 1
+  max_rows_cmdline: 2
   _help_separate_ctrl_name_with_space:
   - If true, separate flow control names from their parentheses
   - with a space
