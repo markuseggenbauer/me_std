@@ -4,6 +4,9 @@ project(
     CXX
 )
 
+find_package(build_api)
+include(me_build_api)
+
 me_find_package(me_std)
 
 me_add_implementation_package(example)
