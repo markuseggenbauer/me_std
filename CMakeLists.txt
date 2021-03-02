@@ -8,8 +8,11 @@ list(
     ${CMAKE_BINARY_DIR}
 )
 
-find_package(build_api)
-include(me_build_api)
+find_package(me_package)
+include(me_find_package)
+
+me_find_package(me_build)
+include(me_build)
 
 me_find_package(
     GTest
