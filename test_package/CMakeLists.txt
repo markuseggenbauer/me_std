@@ -4,7 +4,7 @@ project(
     CXX
 )
 
-find_package(me_std)
+me_find_package(me_std)
 
 me_add_implementation_package(example)
 me_add_packagetest(
