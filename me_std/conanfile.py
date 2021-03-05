@@ -3,20 +3,19 @@ from conans import ConanFile, CMake, tools
 
 class MeStdConan(ConanFile):
     name = "me_std"
-    version = "1.0"
+    version = "main"
     license = "MIT License"
     author = "Markus Eggenbauer markus.eggenbauer@gmail.com"
-    url = "https://github.com/markuseggenbauer/me_std"
+    url = "https://github.com/markuseggenbauer/me_std.git", "me_std"
     description = "My (Markus Eggenbauer) personal standard template library"
     topics = ("C++", "library")
     settings = "os", "compiler", "build_type", "arch"
     options = {"shared": [True, False], "fPIC": [True, False]}
     default_options = {"shared": False, "fPIC": True}
     build_requires = "gtest/1.10.0"
-    requires = "me_package/1.0", "me_build/1.0"
+    requires = "me_package/main", "me_build/main"
     generators = "cmake_find_package"
     exports_sources = "CMakeLists.txt", "impl/*", "package_bootstrap*"
-
 
     def config_options(self):
         if self.settings.os == "Windows":
