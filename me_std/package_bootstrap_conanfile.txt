@@ -1,5 +1,0 @@
-[requires]
-me_package/main
-
-[generators]
-cmake_find_package

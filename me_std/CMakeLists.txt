@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.16)
 
 project(me_std)
 
-include(package_bootstrap.cmake)
+include(bootstrap.cmake)
 
 me_find_package(me_build)
 include(me_build)

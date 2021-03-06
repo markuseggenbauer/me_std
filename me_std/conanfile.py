@@ -13,7 +13,7 @@ class MeStdConan(ConanFile):
     options = {"shared": [True, False], "fPIC": [True, False]}
     default_options = {"shared": False, "fPIC": True}
     build_requires = "gtest/1.10.0"
-    requires = "me_package/main", "me_build/main"
+    requires = "me_package/main", "me_build/main", "gtest/1.10.0"
     generators = "cmake_find_package"
     exports_sources = "CMakeLists.txt", "impl/*", "package_bootstrap*"
 
