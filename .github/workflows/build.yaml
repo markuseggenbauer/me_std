@@ -21,5 +21,4 @@ jobs:
         buildDirectory: "${{ github.workspace }}/../../build"
     - name: test
       run: |
-        cd "${{ github.workspace }}/../../build/me_std" && ctest
-        
+        cd "${{ github.workspace }}/../../build/impl" && ctest

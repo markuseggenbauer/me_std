@@ -1,8 +1,4 @@
-me_add_interface_package(
-    pkg_me_std
-    PUBLIC_HEADER_DIR inc
-    PUBLIC_HEADERS optional_ref.hpp
-)
+me_add_interface_package(pkg_me_std PUBLIC_HEADER_DIR inc PUBLIC_HEADERS optional_ref.hpp)
 
 me_add_packagetest(
     pkg_me_std
@@ -11,3 +7,6 @@ me_add_packagetest(
     SOURCE_DEPENDS GTest::gtest
     CONTAINS GTest::gtest_main
 )
+
+add_test(packagetest_pkg_me_std packagetest_pkg_me_std)
+enable_testing()
