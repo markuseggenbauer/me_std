@@ -9,4 +9,3 @@ me_add_packagetest(
 )
 
 add_test(packagetest_pkg_me_std packagetest_pkg_me_std)
-enable_testing()

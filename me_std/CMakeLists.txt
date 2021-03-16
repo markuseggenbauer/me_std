@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.16)
 
 project(me_std)
+include(CTest)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_BINARY_DIR}")
 list(APPEND CMAKE_PREFIX_PATH "${CMAKE_BINARY_DIR}")
