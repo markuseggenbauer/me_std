@@ -1,9 +1,15 @@
 name: Hello World
-on: workflow_dispatch
+on: [push, workflow_dispatch]
   
 jobs:
-  hello_world:
+  build_and_test:
     runs-on: ubuntu-latest
     steps:
-    - run: |
-        echo "Hello World!"    
+    - name: resolve_dependencies
+      run: echo "conan install ."    
+    - name: cmake_configure
+      run: echo "mkdir build && cd build && cmake .."    
+    - name: cmake_build
+      run: echo "cd build && cmake --target all"    
+    - name: ctest
+      run: echo "cd build && ctest"    
