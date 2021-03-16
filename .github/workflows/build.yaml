@@ -17,5 +17,9 @@ jobs:
     - name: build
       uses: lukka/run-cmake@v3
       with:
-        cmakeListsTxtPath: '${{ github.workspace }}/me_std/CMakeLists.txt'
+        cmakeListsTxtPath: "${{ github.workspace }}/me_std/CMakeLists.txt"
+        buildDirectory: "${{ github.workspace }}/../../build"
+    - name: test
+      run: |
+        cd "${{ github.workspace }}/../../build" && ctest
         
