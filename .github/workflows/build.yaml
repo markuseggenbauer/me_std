@@ -7,9 +7,11 @@ jobs:
     steps:
     - name: prepare environment
       uses: actions/checkout@v2
-    - uses: turtlebrowser/get-conan@main      
-    - name: test
-      run: conan --version    
+    - uses: turtlebrowser/get-conan@main
+    - run: conan profile new default --detect
+    - run: conan profile update settings.compiler.libcxx=libstdc++11 default
+    - run: conan remote add me-repo https://markuseggenbauer.jfrog.io/artifactory/api/conan/me-conan -i 0 --force
+    - run: conan user -r me-repo -p ${{ secrets.CONAN_PASSWORD }} ${{ secrets.CONAN_USERNAME }}
     - name: resolve_dependencies
       run: echo "conan install ."    
     - name: cmake_configure
