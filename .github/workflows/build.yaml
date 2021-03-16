@@ -5,6 +5,10 @@ jobs:
   build_and_test:
     runs-on: ubuntu-latest
     steps:
+    - name: prepare environment
+      uses: actions/checkout@v2      
+    - name: test_cmake
+      run: cmake --version    
     - name: resolve_dependencies
       run: echo "conan install ."    
     - name: cmake_configure
