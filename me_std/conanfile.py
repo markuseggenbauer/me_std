@@ -1,7 +1,15 @@
+import os
 from conans import ConanFile, CMake, tools
 
 
 class MeStdConan(ConanFile):
+    scm = {
+        "type": "git",
+        "url" : "auto",
+        "subfolder" : "me_std",
+        "revision" : "auto",
+        "password" : os.environ.get("SCM_SECRET", None)
+    }    
     name = "me_std"
     version = "main"
     license = "MIT License"
