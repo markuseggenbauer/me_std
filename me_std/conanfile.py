@@ -14,7 +14,7 @@ class MeStdConan(ConanFile):
     version = "main"
     license = "MIT License"
     author = "Markus Eggenbauer markus.eggenbauer@gmail.com"
-    url = "https://github.com/markuseggenbauer/me_std.git", "me_std"
+    url = "https://github.com/markuseggenbauer/me_std.git"
     description = "My (Markus Eggenbauer) personal standard template library"
     topics = ("C++", "library")
     settings = "os", "compiler", "build_type", "arch"
@@ -23,7 +23,7 @@ class MeStdConan(ConanFile):
     build_requires = "gtest/1.10.0"
     requires = "me_find_package/main", "me_build/main", "gtest/1.10.0"
     generators = "cmake_find_package"
-    exports_sources = "CMakeLists.txt", "impl/*", "bootstrap*"
+    exports_sources = "CMakeLists.txt", "impl/*"
 
     def config_options(self):
         if self.settings.os == "Windows":
