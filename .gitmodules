@@ -1,0 +1,3 @@
+[submodule ".devcontainer"]
+	path = .devcontainer
+	url = git@github.com:markuseggenbauer/cpp_dev_container.git
