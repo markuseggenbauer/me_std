@@ -7,5 +7,3 @@ me_add_packagetest(
     SOURCE_DEPENDS GTest::gtest
     CONTAINS GTest::gtest_main
 )
-
-add_test(packagetest_pkg_me_std packagetest_pkg_me_std)
