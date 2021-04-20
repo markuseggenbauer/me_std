@@ -11,7 +11,6 @@ class MeStdConan(ConanFile):
         "password" : os.environ.get("SCM_SECRET", None)
     }    
     name = "me_std"
-    version = "main"
     license = "MIT License"
     author = "Markus Eggenbauer markus.eggenbauer@gmail.com"
     url = "https://github.com/markuseggenbauer/me_std.git"
@@ -24,6 +23,10 @@ class MeStdConan(ConanFile):
     requires = "me_find_package/main", "me_build/main", "gtest/1.10.0"
     generators = "cmake_find_package"
     exports_sources = "CMakeLists.txt", "impl/*"
+
+    def set_version(self):
+        git = tools.Git(folder=self.recipe_folder)
+        self.version = "%s" % (git.get_tag() or git.get_branch())
 
     def config_options(self):
         if self.settings.os == "Windows":
