@@ -21,4 +21,4 @@ jobs:
         cd "${{ github.workspace }}/me_std" && conan create .
     - name: upload conan package
       run: |
-        conan upload --all -c -r me-repo me_std/*
+        conan upload --all -c -r me-repo me_std
