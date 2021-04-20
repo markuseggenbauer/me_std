@@ -1,5 +1,7 @@
 name: build  
-on: [push]
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
 jobs:
   build_and_test:
     runs-on: ubuntu-latest
@@ -22,6 +24,3 @@ jobs:
     - name: test
       run: |
         cd "${{ github.workspace }}/../../build" && ctest
-    - name: create conan package
-      run: |
-        cd "${{ github.workspace }}/me_std" && conan create .
