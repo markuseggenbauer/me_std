@@ -1,9 +1,9 @@
-name: build  
+name: release
 on:
-  pull_request:
-    types: [opened, synchronize, reopened]
+  release:
+    types: [created]  
 jobs:
-  build_and_test:
+  release:
     runs-on: ubuntu-latest
     steps:
     - name: prepare environment
@@ -16,11 +16,9 @@ jobs:
         conan profile update settings.compiler.libcxx=libstdc++11 default && 
         conan remote add me-repo https://markuseggenbauer.jfrog.io/artifactory/api/conan/me-conan -i 0 --force &&
         conan user -r me-repo -p ${{ secrets.CONAN_PASSWORD }} ${{ secrets.CONAN_USERNAME }}
-    - name: build
-      uses: lukka/run-cmake@v3
-      with:
-        cmakeListsTxtPath: "${{ github.workspace }}/me_std/CMakeLists.txt"
-        buildDirectory: "${{ github.workspace }}/../../build"
-    - name: test
+    - name: create conan package
       run: |
-        cd "${{ github.workspace }}/../../build" && ctest --verbose
+        cd "${{ github.workspace }}/me_std" && conan create .
+    - name: upload conan package
+      run: |
+        conan upload --all -c -r me-repo me_std
