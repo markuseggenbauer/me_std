@@ -1,9 +1,9 @@
-name: release
+name: publish
 on:
   release:
     types: [created]  
 jobs:
-  release:
+  publish:
     runs-on: ubuntu-latest
     steps:
     - name: prepare environment
