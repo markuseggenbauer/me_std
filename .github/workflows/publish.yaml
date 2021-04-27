@@ -1,0 +1,24 @@
+name: publish
+on:
+  release:
+    types: [created]  
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+    - name: prepare environment
+      uses: actions/checkout@v2
+    - uses: turtlebrowser/get-conan@main
+    - name: configure conan
+      run: |
+        conan config set general.revisions_enabled=1 &&
+        conan profile new default --detect &&
+        conan profile update settings.compiler.libcxx=libstdc++11 default && 
+        conan remote add me-repo https://markuseggenbauer.jfrog.io/artifactory/api/conan/me-conan -i 0 --force &&
+        conan user -r me-repo -p ${{ secrets.CONAN_PASSWORD }} ${{ secrets.CONAN_USERNAME }}
+    - name: create conan package
+      run: |
+        cd "${{ github.workspace }}/me_std" && conan create .
+    - name: upload conan package
+      run: |
+        conan upload --all -c -r me-repo me_std
