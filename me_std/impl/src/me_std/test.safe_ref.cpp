@@ -55,7 +55,19 @@ TYPED_TEST_P(SafeRefTest, CopyConstruct) {
   EXPECT_EQ(test_value, **copy_test_ref);
 }
 
-REGISTER_TYPED_TEST_SUITE_P(SafeRefTest, DefaultValueConstruct, ValueConstruct, CopyConstruct);
+TYPED_TEST_P(SafeRefTest, MoveConstruct) {
+  auto test_value = get_value<std::decay_t<TypeParam>>(ValueType::test);
+  std::unique_ptr<me_std::safe_ref<TypeParam>> move_test_ref{};
+  {
+    auto test_copy_value = test_value;
+    me_std::safe_ref<TypeParam> test_ref{test_copy_value};
+    move_test_ref = std::make_unique<me_std::safe_ref<TypeParam>>(std::move(test_ref));
+  }
+  EXPECT_EQ(test_value, **move_test_ref);
+}
+
+REGISTER_TYPED_TEST_SUITE_P(SafeRefTest, DefaultValueConstruct, ValueConstruct, CopyConstruct,
+                            MoveConstruct);
 INSTANTIATE_TYPED_TEST_SUITE_P(ME, SafeRefTest, TestTypes);
 
 template <typename T>
