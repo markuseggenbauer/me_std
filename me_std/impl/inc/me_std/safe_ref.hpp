@@ -20,9 +20,7 @@ class safe_ref {
 
   safe_ref(safe_ref<T> const &other)
       : m_store{std::make_unique<value_type>(*other)}, m_ref{*m_store} {}
-  safe_ref(safe_ref<T> &&) = delete;
   safe_ref<T> &operator=(safe_ref<T> const &) = delete;
-  safe_ref<T> &operator=(safe_ref<T> &&) = delete;
   ~safe_ref() = default;
 
   reference_type operator*() const noexcept { return m_ref; }
